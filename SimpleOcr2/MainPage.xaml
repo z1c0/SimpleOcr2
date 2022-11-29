@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SimpleOcr2.ViewModels"
+             xmlns:conv="clr-namespace:Newport.Converters;assembly=Newport"
+             x:Class="SimpleOcr2.MainPage"
+             >
+    <ContentPage.Resources>
+        <conv:BooleanInvertConverter x:Key="booleanInvertConverter"/>
+        <conv:BooleanToBrushConverter
+          x:Key="booleanToBrushConverter">
+          <conv:BooleanToBrushConverter.FalseBrush>
+            <SolidColorBrush
+              Color="Transparent" />
+          </conv:BooleanToBrushConverter.FalseBrush>
+          <conv:BooleanToBrushConverter.TrueBrush>
+            <SolidColorBrush
+              Color="#512BD4" />
+          </conv:BooleanToBrushConverter.TrueBrush>
+        </conv:BooleanToBrushConverter>
+    </ContentPage.Resources>
+
+    <ContentPage.BindingContext>
+        <vm:MainViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition />
+      <ColumnDefinition />
+    </Grid.ColumnDefinitions>
+    <Grid.RowDefinitions>
+      <RowDefinition
+        Height="Auto" />
+      <RowDefinition
+        Height="Auto" />
+      <RowDefinition
+        Height="Auto" />
+      <RowDefinition />
+      <RowDefinition
+        Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <Label
+      Grid.Row="0"
+      Grid.ColumnSpan="2"
+      FontSize="36"
+      HorizontalTextAlignment="Center"
+      Text="{Binding Path=Text}" />
+
+    <RadioButton
+      Grid.Row="1"
+      IsChecked="{Binding Path=IsTraining, Mode=TwoWay}"
+      Grid.Column="0"
+      Padding="5"
+      Content="Training" />
+
+    <RadioButton
+      Grid.Row="1"
+      Grid.Column="1"
+      Padding="5"
+      IsChecked="{Binding Path=IsTraining, Mode=TwoWay, Converter={StaticResource booleanInvertConverter}}"
+      Content="Live" />
+
+    <Picker
+      Margin="20,20,0,0"
+      ItemsSource="{Binding Path=Numbers}"
+      IsEnabled="{Binding Path=IsTraining}"
+      SelectedItem="{Binding Path=SelectedNumber, Mode=TwoWay}"
+      Grid.Row="2"/>
+
+    <Border
+      Margin="20"
+      Grid.Row="3"
+      Grid.ColumnSpan="2">
+      <CollectionView
+        ItemsSource="{Binding Path=Cells}">
+        <CollectionView.ItemsLayout>
+          <GridItemsLayout Orientation="Vertical" Span="{Binding Path=Cols}"/>
+        </CollectionView.ItemsLayout>
+        <CollectionView.ItemTemplate>
+          <DataTemplate>
+            <Border
+                Padding="5"
+                Stroke="Gray"
+                Background="{Binding Path=IsChecked, Converter={StaticResource booleanToBrushConverter}}"
+                StrokeThickness="1"
+                WidthRequest="40"
+                HeightRequest="40">
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Path=TapCommand}"/>
+            </Border.GestureRecognizers>
+            </Border>
+          </DataTemplate>
+        </CollectionView.ItemTemplate>
+      </CollectionView>
+    </Border>
+
+    <ActivityIndicator
+      Margin="100"
+      Grid.Row="3"
+      Grid.ColumnSpan="2"
+      IsRunning="{Binding Path=IsBusy}" />
+
+    <Button
+      Grid.Row="4"
+      Grid.Column="0"
+      Command="{Binding Path=ResetCommmand}"
+      Text="Reset" />
+
+    <Button
+      Grid.Row="4"
+      Grid.Column="1"
+      Command="{Binding Path=OkCommmand}"
+      Text="OK" />
+ </Grid>
+
+</ContentPage>
+
