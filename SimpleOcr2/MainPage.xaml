@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:SimpleOcr2.ViewModels"
+             xmlns:ctl="clr-namespace:Newport.Controls;assembly=Newport"
              xmlns:conv="clr-namespace:Newport.Converters;assembly=Newport"
              x:Class="SimpleOcr2.MainPage"
              >
@@ -37,6 +38,8 @@
       <RowDefinition
         Height="Auto" />
       <RowDefinition />
+      <RowDefinition
+        Height="Auto" />
       <RowDefinition
         Height="Auto" />
     </Grid.RowDefinitions>
@@ -113,6 +116,25 @@
       Grid.Column="1"
       Command="{Binding Path=OkCommmand}"
       Text="OK" />
+
+    <HorizontalStackLayout Grid.Row="5">
+        <CheckBox IsChecked="{Binding Path=IsSnowing, Mode=TwoWay}"/>
+        <Label
+          VerticalTextAlignment="Center"
+          Text="Let it snow ❄️"/>
+     </HorizontalStackLayout>
+
+    <ctl:ParticleControl
+        Grid.RowSpan="6"
+        Grid.ColumnSpan="2"
+        MaxParticleCount="100"
+        Speed="5"
+        Life="250"
+        LifeVariance="200"
+        Color="LightGray"
+        IsRunning="{Binding Path=IsSnowing}"
+        OnNewParticleCommand="{Binding Path=InitParticleCommand}"
+        DrawOutline="False"/>
  </Grid>
 
 </ContentPage>

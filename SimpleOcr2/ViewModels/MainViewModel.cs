@@ -4,6 +4,8 @@ using Newport.ViewModels;
 using DotNeuralNet;
 using System.Diagnostics;
 using Elastic.Apm;
+using System.Windows.Input;
+using Newport.Controls;
 
 namespace SimpleOcr2.ViewModels
 {
@@ -13,6 +15,7 @@ namespace SimpleOcr2.ViewModels
         private List<BackPropagationTrainingRow> _trainingRows;
         private int _selectedNumber;
         private bool _isTraining;
+        private bool _isSnowing;
 
         public MainViewModel()
         {
@@ -49,7 +52,17 @@ namespace SimpleOcr2.ViewModels
                 }
                 Reset();
             });
+            InitParticleCommand = new GenericActionCommand<Particle>(p =>
+            {
+                p.Position.X = RandomData.GetDouble(400);
+                p.Position.Y = 0;
+                p.Velocity.Y = Math.Abs(p.Velocity.Y);
+                p.Color = p.Color.WithAlpha((float)RandomData.GetDouble(0.5, 0.9));
+            });
+
         }
+
+        public ICommand InitParticleCommand { get; }
 
         private async void InitNeuralNetwork()
         {
@@ -65,6 +78,12 @@ namespace SimpleOcr2.ViewModels
         public int Cols { get; set; }
 
         public int Rows { get; set; }
+
+        public bool IsSnowing
+        {
+            get => _isSnowing;
+            set => SetProperty(ref _isSnowing, value);
+        }
 
         public bool IsTraining
         {
